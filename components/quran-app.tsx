@@ -28,6 +28,7 @@ export function QuranApp() {
   const [currentAyah, setCurrentAyah] = useState('1')
   const [endAyah, setEndAyah] = useState('1')
   const [currentPage, setCurrentPage] = useState('1')
+  const [endPage, setEndPage] = useState('1')
   const [currentJuz, setCurrentJuz] = useState('1')
   const [volume, setVolume] = useState(50)
   const [repetitionMethod, setRepetitionMethod] = useState('surah')
@@ -77,7 +78,12 @@ export function QuranApp() {
                   setRepetitionMethod={setRepetitionMethod}
                 />
                 {repetitionMethod === 'page' && (
-                  <PerPage/>
+                  <PerPage
+                    currentPage={currentPage} 
+                    setCurrentPage={setCurrentPage}
+                    endPage={endPage}
+                    setEndPage={setEndPage}
+                  />
                 )}
                 {repetitionMethod === 'juz' && (
                   <PerJuz/>

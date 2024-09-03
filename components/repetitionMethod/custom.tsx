@@ -98,6 +98,7 @@ const Custom: React.FC<customProps> = ({
               ))}
             </SelectContent>
           </Select>
+
           <Select onValueChange={handleAyahChange}>
             <SelectTrigger>
               <SelectValue placeholder="Ayah Start" />
@@ -111,6 +112,7 @@ const Custom: React.FC<customProps> = ({
             </SelectContent>
           </Select>
         </div>
+        
       </div>
       <div>
         <Label className="text-sm font-medium">End Range</Label>
