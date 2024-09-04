@@ -43,6 +43,7 @@ export function QuranApp() {
   const [translationLanguage, setTranslationLanguage] = useState('indonesian')
   const [selectedSubFolder, setSelectedSubFolder] = useState('')
   const [selectedQori, setSelectedQori] = useState('')
+  const [mushafType,setMushafType]=useState("8")
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
@@ -144,6 +145,8 @@ export function QuranApp() {
               setShowTransliteration={setShowTransliteration}
               translationLanguage={translationLanguage}
               setTranslationLanguage={setTranslationLanguage}
+              mushafType={mushafType}
+              setMushafType={setMushafType}
               />
             </TabsContent>
           </Tabs>
@@ -167,6 +170,7 @@ export function QuranApp() {
       selectedQori={selectedQori}
       currentSurahNumber={currentSurahNumber}
       selectedSubFolder={selectedSubFolder}
+      mushafType={mushafType}
       />
     </div>
   )

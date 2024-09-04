@@ -18,9 +18,23 @@ interface settingsProps{
 
     translationLanguage: string;
     setTranslationLanguage: React.Dispatch<React.SetStateAction<string>>;
+
+    mushafType: string;
+    setMushafType: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SettingsMenu: React.FC<settingsProps>= ({volume,setVolume,showTranslation,setShowTranslation,showTransliteration,setShowTransliteration,translationLanguage,setTranslationLanguage}) => {
+
+const SettingsMenu: React.FC<settingsProps>= ({
+  volume,
+  setVolume,
+  showTranslation,
+  setShowTranslation,
+  showTransliteration,
+  setShowTransliteration,
+  translationLanguage,
+  setTranslationLanguage,
+  mushafType,
+  setMushafType}) => {
     return (
         <TabsContent value="settings">
               <div className="space-y-4">
@@ -55,7 +69,19 @@ const SettingsMenu: React.FC<settingsProps>= ({volume,setVolume,showTranslation,
                     <SelectContent>
                       <SelectItem value="english">English</SelectItem>
                       <SelectItem value="indonesian">Indonesian</SelectItem>
-                      {/* Add more languages as needed */}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Mushaf Style</Label>
+                  <Select value={mushafType} onValueChange={setMushafType}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[...Array(11)].map((_, i) => (
+                        <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

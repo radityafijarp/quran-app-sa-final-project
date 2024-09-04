@@ -1,0 +1,57 @@
+{
+    "1": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images1/",
+        "initial": "Yes"
+    },
+    "2": {
+        "extension": ".jpeg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images2/large/page-",
+        "initial": "Yes"
+    },
+    "3": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images3/0",
+        "initial": "Yes"
+    },
+    "4": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images4/0",
+        "initial": "Yes"
+    },
+    "5": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images5/0",
+        "initial": "Yes"
+    },
+    "6": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images6/0",
+        "initial": "Yes"
+    },
+    "7": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images7/quran_tajwid_000",
+        "initial": "Yes"
+    },
+    "8": {
+        "extension": ".png",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images8/",
+        "initial": "No"
+    },
+    "9": {
+        "extension": ".jpg",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images9/",
+        "initial": "No"
+    },
+    "10": {
+        "extension": ".png",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images10/",
+        "initial": "No"
+    },
+    "11": {
+        "extension": ".gif",
+        "initialUrl": "https://www.searchtruth.com/quran/images/images11/",
+        "initial": "No"
+    }
+}

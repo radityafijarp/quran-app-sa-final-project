@@ -2,6 +2,19 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, Pause } from "lucide-react";
 import { CardContent } from "@/components/ui/card";
+import mushafTypes from '@/components/mainPage/mushafTypes.json'; // Adjust the path as necessary
+
+interface MushafData {
+    extension: string;
+    initialUrl: string;
+    initial: string;
+}
+
+interface MushafCollection {
+    [key: string]: MushafData;
+}
+
+const mushafDataCollection: MushafCollection = mushafTypes;
 
 interface BottomMainPageProps {
     repetitionMethod: string;
@@ -13,6 +26,7 @@ interface BottomMainPageProps {
     translationLanguage: string;
     currentSurahNumber: string;
     selectedSubFolder: string;
+    mushafType: string;
 }
 
 interface Ayah {
@@ -31,13 +45,15 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
     showTranslation,
     translationLanguage,
     currentSurahNumber,
-    selectedSubFolder
+    selectedSubFolder,
+    mushafType
 }) => {
     const [ayahs, setAyahs] = useState<Ayah[]>([]);
     const [translations, setTranslations] = useState<Record<number, string>>({});
     const [transliterations, setTransliterations] = useState<Record<number, string>>({});
     const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
     const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+    const [page, setPage] = useState<number>(parseInt(currentPage, 10));
 
     useEffect(() => {
         async function fetchAyahs() {
@@ -100,21 +116,17 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
 
     const handlePlayPause = (ayahNumber: number) => {
         if (playingAyah === ayahNumber) {
-            // Pause if already playing this Ayah
             currentAudio?.pause();
             setPlayingAyah(null);
         } else {
-            // Stop the currently playing audio if any
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
             }
 
-            // Construct the audio URL
             const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${ayahNumber.toString().padStart(3, '0')}.mp3`;
             const newAudio = new Audio(audioUrl);
 
-            // Play the selected Ayah
             newAudio.play().then(() => {
                 setPlayingAyah(ayahNumber);
                 setCurrentAudio(newAudio);
@@ -123,17 +135,50 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                 setPlayingAyah(null);
             });
 
-            // Pause audio after finishing to reset play state
             newAudio.onended = () => {
                 setPlayingAyah(null);
             };
         }
     };
 
+    const getMushafImageUrl = (pageNumber: string) => {
+        const mushaf = mushafDataCollection[mushafType];
+    
+        if (!mushaf) {
+            console.error(`Mushaf type '${mushafType}' not found in the collection.`);
+            return ''; // Or return a default image URL
+        }
+    
+        const paddedPageNumber = mushaf.initial === "Yes" ? pageNumber.padStart(3, '0') : pageNumber;
+        return `${mushaf.initialUrl}${paddedPageNumber}${mushaf.extension}`;
+    };
+
+    const handleNextPage = () => {
+        setPage(prevPage => prevPage + 1);
+    };
+
+    const handlePreviousPage = () => {
+        setPage(prevPage => Math.max(prevPage - 1, 1)); // Ensures the page doesn't go below 1
+    };
+
     return (
         <CardContent>
             {repetitionMethod === 'page' || repetitionMethod === 'juz' ? (
-                <p>Content of page {currentPage}</p>
+                <>
+                    <img
+                        src={getMushafImageUrl(page.toString())}
+                        alt={`Mushaf Page ${page}`}
+                        className="mx-auto"
+                    />
+                    <div className="flex justify-between mt-4">
+                        <Button onClick={handlePreviousPage} variant="outline">
+                            Previous Page
+                        </Button>
+                        <Button onClick={handleNextPage} variant="outline">
+                            Next Page
+                        </Button>
+                    </div>
+                </>
             ) : (
                 <>
                     {ayahs.length > 0 ? (

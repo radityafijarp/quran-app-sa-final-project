@@ -24,6 +24,7 @@ interface mainPageProps{
     selectedQori:string;
     currentSurahNumber:string;
     selectedSubFolder:string;
+    mushafType:string;
 }
 
 const MainPage: React.FC<mainPageProps>= ({
@@ -43,7 +44,8 @@ const MainPage: React.FC<mainPageProps>= ({
   translationLanguage,
   selectedQori,
   currentSurahNumber,
-  selectedSubFolder}) => {
+  selectedSubFolder,
+  mushafType}) => {
 
     const toggleSidebar = () => {
       setIsSidebarOpen(!isSidebarOpen)
@@ -89,6 +91,7 @@ const MainPage: React.FC<mainPageProps>= ({
             translationLanguage={translationLanguage}
             currentSurahNumber={currentSurahNumber}
             selectedSubFolder={selectedSubFolder}
+            mushafType={mushafType}
             />
           </Card>
         </div>
