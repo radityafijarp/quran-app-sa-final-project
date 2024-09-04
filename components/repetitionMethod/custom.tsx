@@ -80,6 +80,7 @@ const Custom: React.FC<customProps> = ({
     setCurrentAyah(ayahNumber);
     setEndAyah(ayahNumber); // Update both current and end Ayah
   };
+  
 
   return (
     <>

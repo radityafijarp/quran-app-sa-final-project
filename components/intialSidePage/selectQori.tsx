@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import React, { useEffect, useState } from "react";
-import qoriData from "@/components/intialSidePage/qoriData.json"; 
+import qoriData from "@/components/intialSidePage/qoriData.json";
 
 // Define the type for a Qori object
 interface Qori {
@@ -32,8 +32,9 @@ const SelectQori: React.FC<selectQoriProps> = ({
 }) => {
     const [qoris, setQoris] = useState<Qori[]>([]);
     const [uniqueNames, setUniqueNames] = useState<string[]>([]);
-    const [selectedName, setSelectedName] = useState<string | null>(null);
+    const [selectedName, setSelectedName] = useState<string>("Ghamadi"); // Set default Qori name
     const [bitrates, setBitrates] = useState<string[]>([]);
+    const [selectedBitrate, setSelectedBitrate] = useState<string>("40kbps"); // Set default bitrate
 
     useEffect(() => {
         // Cast qoriData to QoriData type
@@ -49,9 +50,46 @@ const SelectQori: React.FC<selectQoriProps> = ({
         // Extract unique Qori names
         const namesSet = new Set(qoriDataArray.map(q => q.name));
         setUniqueNames(Array.from(namesSet));
-    }, []);
 
-    // Handle Qori name selection
+        // Set default values if not already set
+        const defaultQori = "Ghamadi"; // Default Qori name
+        const defaultBitrate = "40kbps"; // Default bitrate
+
+        if (selectedQori === "" || selectedQori === undefined) {
+            setSelectedQori(defaultQori);
+            setSelectedName(defaultQori);
+        }
+
+        if (selectedBitrate === "" || selectedBitrate === undefined) {
+            setSelectedBitrate(defaultBitrate);
+        }
+
+    }, [selectedQori, selectedBitrate]);
+
+    useEffect(() => {
+        if (selectedName) {
+            // Filter bitrates based on the selected name
+            const filteredBitrates = qoris
+                .filter(qori => qori.name === selectedName)
+                .map(qori => qori.bitrate);
+            setBitrates(filteredBitrates);
+
+            // Update bitrate to default if available
+            if (filteredBitrates.includes("40kbps")) {
+                setSelectedBitrate("40kbps");
+            }
+        }
+    }, [selectedName, qoris]);
+
+    useEffect(() => {
+        if (selectedBitrate && selectedName) {
+            const selectedQoriObj = qoris.find(qori => qori.name === selectedName && qori.bitrate === selectedBitrate);
+            if (selectedQoriObj) {
+                setSelectedSubFolder(selectedQoriObj.subfolder);
+            }
+        }
+    }, [selectedBitrate, selectedName, qoris, setSelectedSubFolder]);
+
     const handleNameChange = (name: string) => {
         setSelectedName(name);
         setSelectedQori(name);
@@ -64,26 +102,20 @@ const SelectQori: React.FC<selectQoriProps> = ({
 
         // Reset selectedSubFolder when the name changes
         setSelectedSubFolder("");
-        // console.log("Selected Qori: ", name);
+        // Reset bitrate selection if it's not in the new list
+        if (!filteredBitrates.includes(selectedBitrate)) {
+            setSelectedBitrate(filteredBitrates[0] || "40kbps");
+        }
     };
 
-    // Handle Bitrate selection and update SubFolder accordingly
     const handleBitrateChange = (bitrate: string) => {
-        // Update the selected bitrate (optional if you want to track this separately)
-        const selectedQoriObj = qoris.find(qori => qori.name === selectedQori && qori.bitrate === bitrate);
-
-        if (selectedQoriObj) {
-            setSelectedSubFolder(selectedQoriObj.subfolder);
-            // console.log("Selected Subfolder: ", selectedQoriObj.subfolder);
-        }
-
-        // console.log('Selected Bitrate:', bitrate);
+        setSelectedBitrate(bitrate);
     };
 
     return (
         <div>
             <Label className="text-sm font-medium">Select Qari</Label>
-            <Select onValueChange={handleNameChange}>
+            <Select onValueChange={handleNameChange} value={selectedQori || "Ghamadi"}>
                 <SelectTrigger>
                     <SelectValue placeholder="Choose a Qari" />
                 </SelectTrigger>
@@ -96,23 +128,21 @@ const SelectQori: React.FC<selectQoriProps> = ({
                 </SelectContent>
             </Select>
 
-            {selectedName && (
-                <div className="mt-4">
-                    <Label className="text-sm font-medium">Select Bitrate</Label>
-                    <Select onValueChange={handleBitrateChange}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Choose a Bitrate" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {bitrates.map((bitrate, index) => (
-                                <SelectItem key={index} value={bitrate}>
-                                    {bitrate}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            )}
+            <div className="mt-4">
+                <Label className="text-sm font-medium">Select Bitrate</Label>
+                <Select onValueChange={handleBitrateChange} value={selectedBitrate || "40kbps"}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Choose a Bitrate" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {bitrates.map((bitrate, index) => (
+                            <SelectItem key={index} value={bitrate}>
+                                {bitrate}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
         </div>
     );
 }
