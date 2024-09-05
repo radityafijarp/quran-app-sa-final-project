@@ -3,6 +3,7 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, Repeat, Sun, Moon, Chevron
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import TopMain from "./topMain";
 import BottomMain from "./bottomMain";
+import { Surah } from "./types";
 
 interface mainPageProps{
     isSidebarOpen: boolean;
@@ -37,6 +38,9 @@ interface mainPageProps{
     currentJuz:string;
     endSurahNumber:string;
     perPageAyah: string;
+    endAyah:string;
+    setEndAyah: React.Dispatch<React.SetStateAction<string>>;
+    surahs:Surah[];
 
 }
 
@@ -70,11 +74,15 @@ const MainPage: React.FC<mainPageProps>= ({
   endSurahNumber,
   setCurrentJuz,
   currentJuz,
-  perPageAyah}) => {
+  perPageAyah,
+  endAyah,
+  setEndAyah,
+  surahs}) => {
 
     const toggleSidebar = () => {
       setIsSidebarOpen(!isSidebarOpen)
       // console.log(selectedSubFolder)
+      console.log(Array.isArray(surahs))
     }
 
     return(
@@ -109,7 +117,9 @@ const MainPage: React.FC<mainPageProps>= ({
           endSurahNumber={endSurahNumber}
           setCurrentJuz={setCurrentJuz}
           currentJuz={currentJuz}
-          
+          endAyah={endAyah}
+          setEndAyah={setEndAyah}
+          surahs={surahs}
           />
           
           <Card>

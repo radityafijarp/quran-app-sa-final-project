@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause, SkipBack, SkipForward, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { Surah } from "./types";
 
 interface topMainPageProps {
     isPlaying: boolean;
@@ -20,6 +21,8 @@ interface topMainPageProps {
     endPage: string;
     currentJuz: string;
     endSurahNumber: string;
+    endAyah:string;
+    setEndAyah: React.Dispatch<React.SetStateAction<string>>;
 
     setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
     setAyahRepetition: React.Dispatch<React.SetStateAction<number>>;
@@ -29,6 +32,7 @@ interface topMainPageProps {
     setCurrentAyah: React.Dispatch<React.SetStateAction<string>>;
     setCurrentSurahNumber: React.Dispatch<React.SetStateAction<string>>;
     setCurrentJuz: React.Dispatch<React.SetStateAction<string>>;
+    surahs:Surah[];
 }
 
 const TopMain: React.FC<topMainPageProps> = ({
@@ -54,7 +58,10 @@ const TopMain: React.FC<topMainPageProps> = ({
     setCurrentSurahNumber,
     endSurahNumber,
     setCurrentJuz,
-    currentJuz
+    currentJuz,
+    endAyah,
+    setEndAyah,
+    surahs
 }) => {
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
@@ -91,19 +98,24 @@ const TopMain: React.FC<topMainPageProps> = ({
         const initialRepetition = repetitionCount;
         const initialPage=currentPage
 
-        for (let i = parseInt(initialPage); i <= parseInt(endPage); i++) {
-            let playingPage = i.toString();
-
-            for (let y = initialRepetition; y > 0; y--) {
-                const pageAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/PageMp3s/Page${playingPage.padStart(3, '0')}.mp3`;
-                await playAudio(pageAudioUrl);
-                setRepetitionCount(prevCount => prevCount - 1);
+        if(ayahRepetition==1){
+            for (let i = parseInt(initialPage); i <= parseInt(endPage); i++) {
+                let playingPage = i.toString();
+    
+                for (let y = initialRepetition; y > 0; y--) {
+                    const pageAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/PageMp3s/Page${playingPage.padStart(3, '0')}.mp3`;
+                    await playAudio(pageAudioUrl);
+                    setRepetitionCount(prevCount => prevCount - 1);
+                }
+                setRepetitionCount(initialRepetition);
+                setCurrentPage((i+1).toString())
             }
+    
             setRepetitionCount(initialRepetition);
-            setCurrentPage((i+1).toString())
-        }
+        } else {
 
-        setRepetitionCount(initialRepetition);
+        }
+        
     };
 
     const handleJuzRepetition = async () => {
@@ -144,32 +156,74 @@ const TopMain: React.FC<topMainPageProps> = ({
     };
 
     const handleCustomRepetition = async () => {
-        const initialRepetition = repetitionCount;
-        let currentAyahNumber = parseInt(currentAyah);
-
-        while (repetitionCount > 0) {
-            for (let ayah = currentAyahNumber; ayah <= parseInt(endSurahNumber); ayah++) {
-                const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${ayah.toString().padStart(3, '0')}.mp3`;
-
-                for (let r = 0; r < ayahRepetition; r++) {
-                    await playAudio(ayahAudioUrl);
-                    setRepetitionCount(prevCount => prevCount - 1);
-                }
-                
-                if (repetitionCount <= 0) break;
-            }
-
-            // Repeat range if needed
-            if (repetitionCount > 0) {
-                for (let r = 0; r < rangeRepetition; r++) {
-                    if (repetitionCount <= 0) break;
-                    currentAyahNumber = parseInt(currentAyah);
-                }
-            }
+        // Ensure `surahs` is an array
+        if (!Array.isArray(surahs)) {
+            console.error("Surahs data is not available");
+            return;
         }
-
-        setRepetitionCount(initialRepetition);
+    
+        let currentAyahNumber = parseInt(currentAyah);
+        let tempEndAyah = endAyah; // Initialize temporary end ayah with endAyah
+        const initialAyahRepetition = ayahRepetition; // Store the initial ayah repetition count
+        let localRepetitionCount = rangeRepetition; // Use a local variable for repetition count
+    
+        while (localRepetitionCount > 0) {
+            currentAyahNumber = parseInt(currentAyah); // Reset current ayah at the start of each range
+    
+            // Loop through each surah in the range
+            for (let surahNumber = parseInt(currentSurahNumber); surahNumber <= parseInt(endSurahNumber); surahNumber++) {
+                // Ensure surah data exists
+                const surah = surahs.find((surah) => surah.number === surahNumber);
+                if (!surah) {
+                    console.warn(`Surah number ${surahNumber} not found in surahs data`);
+                    continue;
+                }
+    
+                // Update the current surah state when it changes
+                setCurrentSurah(surah.englishName);
+    
+                // Check if it's not the last surah in the range, then fetch the total ayahs
+                if (surahNumber !== parseInt(endSurahNumber)) {
+                    const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}`);
+                    const surahData = await response.json();
+                    tempEndAyah = surahData.data.numberOfAyahs; // Set tempEndAyah to the current surah's total ayahs
+                } else {
+                    tempEndAyah = endAyah; // For the last surah, use the specified end ayah
+                }
+    
+                // Loop through ayahs within the surah
+                for (let ayah = currentAyahNumber; ayah <= parseInt(tempEndAyah); ayah++) {
+                    const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${surahNumber.toString().padStart(3, '0')}${ayah.toString().padStart(3, '0')}.mp3`;
+    
+                    // Update the current ayah state when it changes
+                    setCurrentAyah(ayah.toString());
+    
+                    let localAyahRepetition = initialAyahRepetition; // Use a local variable for ayah repetition
+    
+                    // Play each ayah for the specified number of repetitions (ayahRepetition)
+                    while (localAyahRepetition > 0) {
+                        await playAudio(ayahAudioUrl); // Play the audio and wait for it to finish
+                        localAyahRepetition--; // Decrease the local repetition count
+                    }
+                }
+    
+                // Reset currentAyahNumber for the next surah
+                currentAyahNumber = 1;
+    
+                // If localRepetitionCount is depleted, stop the surah loop
+                if (localRepetitionCount <= 0) break;
+            }
+    
+            // Decrease the local repetition count after finishing the current range
+            localRepetitionCount--;
+        }
+    
+        // Update the state with the final repetition count
+        setRepetitionCount(localRepetitionCount);
     };
+    
+    
+        
 
     const togglePlayPause = () => {
         if (audio) {

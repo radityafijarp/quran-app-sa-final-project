@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -18,6 +18,7 @@ import SettingsMenu from './settings/settings'
 import MainPage from './mainPage/mainPage'
 import SelectMethod from './intialSidePage/selectMethod'
 import SelectQori from './intialSidePage/selectQori'
+import { Surah } from './mainPage/types'
 
 export function QuranApp() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -46,11 +47,28 @@ export function QuranApp() {
   const [mushafType,setMushafType]=useState("8")
   const [perPageAyah,setPerPageAyah]=useState("per ayah")
 
+  const [surahs, setSurahs] = useState<Surah[]>([]);
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
     // console.log(selectedSubFolder)
   
   }
+
+  
+  useEffect(() => {
+    async function fetchSurahs() {
+      try {
+        const response = await fetch("https://api.alquran.cloud/v1/surah");
+        const result = await response.json();
+        setSurahs(result.data);
+      } catch (error) {
+        console.error("Error fetching Surah data:", error);
+      }
+    }
+
+    fetchSurahs();
+  }, []);
 
   return (
     <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`}>
@@ -114,6 +132,12 @@ export function QuranApp() {
                     setCurrentAyah={setCurrentAyah}
                     endAyah={endAyah}
                     setEndAyah={setEndAyah}
+                    setCurrentSurahNumber={setCurrentSurahNumber}
+                    currentSurahNumber={currentSurahNumber}
+                    setEndSurahNumber={setEndSurahNumber}
+                    endSurahNumber={endSurahNumber}
+                    surahs={surahs}
+                    setSurahs={setSurahs}
                   />
                 )}
 
@@ -188,6 +212,9 @@ export function QuranApp() {
       setCurrentJuz={setCurrentJuz}
       currentJuz={currentJuz}
       perPageAyah={perPageAyah}
+      endAyah={endAyah}
+      setEndAyah={setEndAyah}
+      surahs={surahs}
       />
     </div>
   )
