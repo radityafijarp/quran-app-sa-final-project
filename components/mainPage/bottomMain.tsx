@@ -27,6 +27,8 @@ interface BottomMainPageProps {
     currentSurahNumber: string;
     selectedSubFolder: string;
     mushafType: string;
+    setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+    perPageAyah: string;
 }
 
 interface Ayah {
@@ -46,14 +48,16 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
     translationLanguage,
     currentSurahNumber,
     selectedSubFolder,
-    mushafType
+    mushafType,
+    setCurrentPage,
+    perPageAyah
 }) => {
     const [ayahs, setAyahs] = useState<Ayah[]>([]);
     const [translations, setTranslations] = useState<Record<number, string>>({});
     const [transliterations, setTransliterations] = useState<Record<number, string>>({});
     const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
     const [playingAyah, setPlayingAyah] = useState<number | null>(null);
-    const [page, setPage] = useState<number>(parseInt(currentPage, 10));
+    const [mushafImageUrl, setMushafImageUrl] = useState<string>("");
 
     useEffect(() => {
         async function fetchAyahs() {
@@ -114,7 +118,57 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
         fetchTranslationsAndTransliterations();
     }, [currentSurahNumber, translationLanguage]);
 
-    const handlePlayPause = (ayahNumber: number) => {
+    useEffect(() => {
+        const mushaf = mushafDataCollection[mushafType];
+    
+        if (mushaf) {
+            const paddedPageNumber = mushaf.initial === "Yes" ? currentPage.padStart(3, '0') : currentPage;
+            setMushafImageUrl(`${mushaf.initialUrl}${paddedPageNumber}${mushaf.extension}`);
+        }
+    }, [currentPage, mushafType]);
+
+    useEffect(() => {
+        if (perPageAyah === "per ayah") {
+            // Fetch Ayahs by page when perPageAyah is set to "per ayah"
+            const fetchAyahsByPage = async () => {
+                try {
+                    const response = await fetch(`https://api.alquran.cloud/v1/page/${currentPage}`);
+                    const result = await response.json();
+                    const ayahsData = result.data.ayahs.map((ayah: any) => ({
+                        number: ayah.numberInSurah,
+                        text: ayah.text,
+                        surahNumber: ayah.surah.number
+                    }));
+                    setAyahs(ayahsData);
+    
+                    // Fetch Bahasa translations for each Ayah
+                    const translationPromises = ayahsData.map(async (ayah: any) => {
+                        const translationResponse = await fetch(`https://quran-api-id.vercel.app/surahs/${ayah.surahNumber}/ayahs/${ayah.number}`);
+                        const translationResult = await translationResponse.json();
+                        return {
+                            ayahNumber: ayah.number,
+                            translation: translationResult.translation
+                        };
+                    });
+    
+                    const translationsData = await Promise.all(translationPromises);
+                    const translationMap: Record<number, string> = {};
+                    translationsData.forEach(({ ayahNumber, translation }) => {
+                        translationMap[ayahNumber] = translation;
+                    });
+                    setTranslations(translationMap);
+                } catch (error) {
+                    console.error("Error fetching Ayah data by page:", error);
+                }
+            };
+    
+            fetchAyahsByPage();
+        }
+    }, [currentPage, perPageAyah]);
+    
+    
+
+    const handlePlayPause = async (ayahNumber: number) => {
         if (playingAyah === ayahNumber) {
             currentAudio?.pause();
             setPlayingAyah(null);
@@ -123,10 +177,26 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
             }
-
-            const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${ayahNumber.toString().padStart(3, '0')}.mp3`;
+    
+            let surahNumber = currentSurahNumber;
+            if (perPageAyah === "per ayah") {
+                // Fetch Surah number and Ayah number from API if in "per ayah" mode
+                try {
+                    const response = await fetch(`https://api.alquran.cloud/v1/page/${currentPage}`);
+                    const result = await response.json();
+                    const ayah = result.data.ayahs.find((a: any) => a.number === ayahNumber);
+                    if (ayah) {
+                        surahNumber = ayah.surah.number;
+                    }
+                } catch (error) {
+                    console.error("Error fetching Surah number and Ayah number:", error);
+                    return;
+                }
+            }
+    
+            const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${surahNumber.padStart(3, '0')}${ayahNumber.toString().padStart(3, '0')}.mp3`;
             const newAudio = new Audio(audioUrl);
-
+    
             newAudio.play().then(() => {
                 setPlayingAyah(ayahNumber);
                 setCurrentAudio(newAudio);
@@ -134,52 +204,95 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                 console.error("Error playing audio:", error);
                 setPlayingAyah(null);
             });
-
+    
             newAudio.onended = () => {
                 setPlayingAyah(null);
             };
         }
     };
-
-    const getMushafImageUrl = (pageNumber: string) => {
-        const mushaf = mushafDataCollection[mushafType];
     
-        if (!mushaf) {
-            console.error(`Mushaf type '${mushafType}' not found in the collection.`);
-            return ''; // Or return a default image URL
-        }
-    
-        const paddedPageNumber = mushaf.initial === "Yes" ? pageNumber.padStart(3, '0') : pageNumber;
-        return `${mushaf.initialUrl}${paddedPageNumber}${mushaf.extension}`;
-    };
 
     const handleNextPage = () => {
-        setPage(prevPage => prevPage + 1);
+        if (parseInt(currentPage)<604){
+            setCurrentPage((parseInt(currentPage)+1).toString());
+        }
     };
 
     const handlePreviousPage = () => {
-        setPage(prevPage => Math.max(prevPage - 1, 1)); // Ensures the page doesn't go below 1
+        if (parseInt(currentPage)>1){
+            setCurrentPage((parseInt(currentPage)-1).toString());
+        }
+         // Ensures the page doesn't go below 1
     };
 
     return (
         <CardContent>
             {repetitionMethod === 'page' || repetitionMethod === 'juz' ? (
                 <>
-                    <img
-                        src={getMushafImageUrl(page.toString())}
-                        alt={`Mushaf Page ${page}`}
-                        className="mx-auto"
-                    />
-                    <div className="flex justify-between mt-4">
-                        <Button onClick={handlePreviousPage} variant="outline">
-                            Previous Page
-                        </Button>
-                        <Button onClick={handleNextPage} variant="outline">
-                            Next Page
-                        </Button>
-                    </div>
+                    {perPageAyah === "per page" ? (
+                        // Render Mushaf image for "per page" repetition method
+                        <>
+                            <img
+                                src={mushafImageUrl}
+                                alt={`Mushaf Page ${currentPage}`}
+                                className="mx-auto"
+                            />
+                            <div className="flex justify-between mt-4">
+                                <Button onClick={handlePreviousPage} variant="outline">
+                                    Previous Page
+                                </Button>
+                                <Button onClick={handleNextPage} variant="outline">
+                                    Next Page
+                                </Button>
+                            </div>
+                        </>
+                    ) : (
+                        // Render ayahs with play buttons and translations for "per ayah" repetition method
+                        <>
+                            {ayahs.length > 0 ? (
+                                <>
+                                    {ayahs.map((ayah) => (
+                                        <div key={ayah.number} className="mb-4 p-4 border border-gray-300 rounded flex items-start">
+                                            <div className="mr-4 text-xl font-bold flex items-center space-x-2">
+                                                <Button onClick={() => handlePlayPause(ayah.number)} size="icon" variant="outline">
+                                                    {playingAyah === ayah.number ? (
+                                                        <Pause className="h-4 w-4" />
+                                                    ) : (
+                                                        <Play className="h-4 w-4" />
+                                                    )}
+                                                </Button>
+                                                <span>{ayah.number}</span>
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-right text-4xl mb-2 font-['Scheherazade']">
+                                                    {ayah.text}
+                                                </div>
+                                                {showTranslation && translations[ayah.number] && (
+                                                    <p className="mb-2">
+                                                        {translations[ayah.number]}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {/* Next and Previous buttons */}
+                                    <div className="flex justify-between mt-4">
+                                        <Button onClick={handlePreviousPage} variant="outline">
+                                            Previous Page
+                                        </Button>
+                                        <Button onClick={handleNextPage} variant="outline">
+                                            Next Page
+                                        </Button>
+                                    </div>
+                                </>
+                            ) : (
+                                <p>No data available.</p>
+                            )}
+                        </>
+                    )}
                 </>
             ) : (
+                // Render for custom/surah methods
                 <>
                     {ayahs.length > 0 ? (
                         ayahs.map((ayah) => (
@@ -203,7 +316,7 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                                             {transliterations[ayah.number]}
                                         </p>
                                     )}
-                                    {showTranslation && (
+                                    {showTranslation && translations[ayah.number] && (
                                         <p className="mb-2">
                                             {translations[ayah.number]}
                                         </p>
@@ -218,6 +331,8 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
             )}
         </CardContent>
     );
+    
+    
 };
 
 export default BottomMain;

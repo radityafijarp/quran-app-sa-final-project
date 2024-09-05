@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Play, Pause, SkipBack, SkipForward, Repeat } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Play, Pause, SkipBack, SkipForward, Repeat } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 
 interface topMainPageProps {
@@ -16,7 +16,19 @@ interface topMainPageProps {
     repetitionCount: number;
     selectedQori: string;
     selectedSubFolder: string;
-    currentSurahNumber:string
+    currentSurahNumber: string;
+    endPage: string;
+    currentJuz: string;
+    endSurahNumber: string;
+
+    setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+    setAyahRepetition: React.Dispatch<React.SetStateAction<number>>;
+    setRangeRepetition: React.Dispatch<React.SetStateAction<number>>;
+    setRepetitionCount: React.Dispatch<React.SetStateAction<number>>;
+    setCurrentSurah: React.Dispatch<React.SetStateAction<string>>;
+    setCurrentAyah: React.Dispatch<React.SetStateAction<string>>;
+    setCurrentSurahNumber: React.Dispatch<React.SetStateAction<string>>;
+    setCurrentJuz: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const TopMain: React.FC<topMainPageProps> = ({
@@ -31,32 +43,156 @@ const TopMain: React.FC<topMainPageProps> = ({
     repetitionCount,
     selectedQori,
     selectedSubFolder,
-    currentSurahNumber
+    currentSurahNumber,
+    setCurrentPage,
+    endPage,
+    setAyahRepetition,
+    setRangeRepetition,
+    setRepetitionCount,
+    setCurrentAyah,
+    setCurrentSurah,
+    setCurrentSurahNumber,
+    endSurahNumber,
+    setCurrentJuz,
+    currentJuz
 }) => {
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
     useEffect(() => {
-        const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${currentAyah.padStart(3, '0')}.mp3`;
-        console.log("Audio URL:", audioUrl);  // Log the URL to verify
+        let audioUrl = "";
+
+        if (repetitionMethod === 'page' || repetitionMethod === 'juz') {
+            audioUrl = `https://everyayah.com/data/${selectedSubFolder}/PageMp3s/Page${currentPage.padStart(3, '0')}.mp3`;
+        } else {
+            audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${currentAyah.padStart(3, '0')}.mp3`;
+        }
+
+        console.log("Audio URL:", audioUrl);
         const newAudio = new Audio(audioUrl);
-    
+
         setAudio(newAudio);
-    
+
         return () => {
             newAudio.pause();
             newAudio.src = "";
             setAudio(null);
         };
-    }, [selectedSubFolder, currentSurah, currentAyah]);
-    
+    }, [selectedSubFolder, currentSurah, currentAyah, currentPage, repetitionMethod, currentSurahNumber]);
+
+    const playAudio = async (url: string) => {
+        return new Promise<void>((resolve) => {
+            const audio = new Audio(url);
+            audio.play();
+            audio.onended = () => resolve();
+        });
+    };
+
+    const handlePageRepetition = async () => {
+        const initialRepetition = repetitionCount;
+        const initialPage=currentPage
+
+        for (let i = parseInt(initialPage); i <= parseInt(endPage); i++) {
+            let playingPage = i.toString();
+
+            for (let y = initialRepetition; y > 0; y--) {
+                const pageAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/PageMp3s/Page${playingPage.padStart(3, '0')}.mp3`;
+                await playAudio(pageAudioUrl);
+                setRepetitionCount(prevCount => prevCount - 1);
+            }
+            setRepetitionCount(initialRepetition);
+            setCurrentPage((i+1).toString())
+        }
+
+        setRepetitionCount(initialRepetition);
+    };
+
+    const handleJuzRepetition = async () => {
+        const initialRepetition = repetitionCount;
+        const juzNumber = parseInt(currentJuz);
+
+        let startPage = juzNumber === 1 ? 1 : (juzNumber - 1) * 20 + 2;
+        let endPage = juzNumber === 1 ? 21 : startPage + 19;
+
+        if (juzNumber === 30) {
+            endPage = 604;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            for (let y = initialRepetition; y > 0; y--) {
+                const pageAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/PageMp3s/Page${i.toString().padStart(3, '0')}.mp3`;
+                await playAudio(pageAudioUrl);
+                setRepetitionCount(prevCount => prevCount - 1);
+            }
+        }
+
+        setRepetitionCount(initialRepetition);
+    };
+
+    const handleSurahRepetition = async () => {
+        const initialRepetition = repetitionCount;
+        const totalAyahs = parseInt(endSurahNumber) - parseInt(currentSurahNumber) + 1;
+
+        for (let i = parseInt(currentSurahNumber); i < parseInt(currentSurahNumber) + totalAyahs; i++) {
+            for (let y = initialRepetition; y > 0; y--) {
+                const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${i.toString().padStart(3, '0')}${currentAyah.padStart(3, '0')}.mp3`;
+                await playAudio(ayahAudioUrl);
+                setRepetitionCount(prevCount => prevCount - 1);
+            }
+        }
+
+        setRepetitionCount(initialRepetition);
+    };
+
+    const handleCustomRepetition = async () => {
+        const initialRepetition = repetitionCount;
+        let currentAyahNumber = parseInt(currentAyah);
+
+        while (repetitionCount > 0) {
+            for (let ayah = currentAyahNumber; ayah <= parseInt(endSurahNumber); ayah++) {
+                const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${ayah.toString().padStart(3, '0')}.mp3`;
+
+                for (let r = 0; r < ayahRepetition; r++) {
+                    await playAudio(ayahAudioUrl);
+                    setRepetitionCount(prevCount => prevCount - 1);
+                }
+                
+                if (repetitionCount <= 0) break;
+            }
+
+            // Repeat range if needed
+            if (repetitionCount > 0) {
+                for (let r = 0; r < rangeRepetition; r++) {
+                    if (repetitionCount <= 0) break;
+                    currentAyahNumber = parseInt(currentAyah);
+                }
+            }
+        }
+
+        setRepetitionCount(initialRepetition);
+    };
 
     const togglePlayPause = () => {
         if (audio) {
             if (isPlaying) {
                 audio.pause();
-                console.log
             } else {
-                audio.play();
+                switch (repetitionMethod) {
+                    case 'page':
+                        handlePageRepetition();
+                        break;
+                    case 'juz':
+                        handleJuzRepetition();
+                        break;
+                    case 'surah':
+                        handleSurahRepetition();
+                        break;
+                    case 'custom':
+                        handleCustomRepetition();
+                        break;
+                    default:
+                        audio.play();
+                        break;
+                }
             }
             setIsPlaying(!isPlaying);
         }
@@ -96,7 +232,7 @@ const TopMain: React.FC<topMainPageProps> = ({
                 </div>
             </CardContent>
         </Card>
-    )
-}
+    );
+};
 
 export default TopMain;

@@ -41,9 +41,10 @@ export function QuranApp() {
   const [showTranslation, setShowTranslation] = useState(true)
   const [showTransliteration, setShowTransliteration] = useState(true)
   const [translationLanguage, setTranslationLanguage] = useState('indonesian')
-  const [selectedSubFolder, setSelectedSubFolder] = useState('')
-  const [selectedQori, setSelectedQori] = useState('')
+  const [selectedSubFolder, setSelectedSubFolder] = useState('Ghamadi_40kbps')
+  const [selectedQori, setSelectedQori] = useState('Ghamadi')
   const [mushafType,setMushafType]=useState("8")
+  const [perPageAyah,setPerPageAyah]=useState("per ayah")
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
@@ -84,6 +85,8 @@ export function QuranApp() {
                     setCurrentPage={setCurrentPage}
                     endPage={endPage}
                     setEndPage={setEndPage}
+                    ayahRepetition={ayahRepetition}
+                    setAyahRepetition={setAyahRepetition}
                   />
                 )}
                 {repetitionMethod === 'juz' && (
@@ -102,7 +105,7 @@ export function QuranApp() {
                     ayahRepetition={ayahRepetition}
                     setAyahRepetition={setAyahRepetition}
                     rangeRepetition={rangeRepetition}
-                    setRangeRepetition={setAyahRepetition}
+                    setRangeRepetition={setRangeRepetition}
                     currentSurah={currentSurah}
                     setCurrentSurah={setCurrentSurah}
                     endSurah={endSurah}
@@ -147,6 +150,8 @@ export function QuranApp() {
               setTranslationLanguage={setTranslationLanguage}
               mushafType={mushafType}
               setMushafType={setMushafType}
+              perPageAyah={perPageAyah}
+              setPerPageAyah={setPerPageAyah}
               />
             </TabsContent>
           </Tabs>
@@ -171,6 +176,18 @@ export function QuranApp() {
       currentSurahNumber={currentSurahNumber}
       selectedSubFolder={selectedSubFolder}
       mushafType={mushafType}
+      setCurrentPage={setCurrentPage}
+      endPage={endPage}
+      setAyahRepetition={setAyahRepetition}
+      setRangeRepetition={setRangeRepetition}
+      setRepetitionCount={setRepetitionCount}
+      setCurrentAyah={setCurrentAyah}
+      setCurrentSurah={setCurrentSurah}
+      setCurrentSurahNumber={setCurrentSurahNumber}
+      endSurahNumber={endSurahNumber}
+      setCurrentJuz={setCurrentJuz}
+      currentJuz={currentJuz}
+      perPageAyah={perPageAyah}
       />
     </div>
   )

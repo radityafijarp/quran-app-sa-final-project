@@ -25,6 +25,19 @@ interface mainPageProps{
     currentSurahNumber:string;
     selectedSubFolder:string;
     mushafType:string;
+    setCurrentPage:React.Dispatch<React.SetStateAction<string>>;
+    endPage:string;
+    setAyahRepetition: React.Dispatch<React.SetStateAction<number>>;
+    setRangeRepetition: React.Dispatch<React.SetStateAction<number>>;
+    setRepetitionCount: React.Dispatch<React.SetStateAction<number>>;
+    setCurrentSurah:React.Dispatch<React.SetStateAction<string>>;
+    setCurrentAyah:React.Dispatch<React.SetStateAction<string>>;
+    setCurrentSurahNumber:React.Dispatch<React.SetStateAction<string>>;
+    setCurrentJuz:React.Dispatch<React.SetStateAction<string>>;
+    currentJuz:string;
+    endSurahNumber:string;
+    perPageAyah: string;
+
 }
 
 const MainPage: React.FC<mainPageProps>= ({
@@ -45,7 +58,19 @@ const MainPage: React.FC<mainPageProps>= ({
   selectedQori,
   currentSurahNumber,
   selectedSubFolder,
-  mushafType}) => {
+  mushafType,
+  setCurrentPage,
+  endPage,
+  setAyahRepetition,
+  setRangeRepetition,
+  setRepetitionCount,
+  setCurrentAyah,
+  setCurrentSurah,
+  setCurrentSurahNumber,
+  endSurahNumber,
+  setCurrentJuz,
+  currentJuz,
+  perPageAyah}) => {
 
     const toggleSidebar = () => {
       setIsSidebarOpen(!isSidebarOpen)
@@ -73,6 +98,18 @@ const MainPage: React.FC<mainPageProps>= ({
           selectedQori={selectedQori}
           selectedSubFolder={selectedSubFolder}
           currentSurahNumber={currentSurahNumber}
+          setCurrentPage={setCurrentPage}
+          endPage={endPage}
+          setAyahRepetition={setAyahRepetition}
+          setRangeRepetition={setRangeRepetition}
+          setRepetitionCount={setRepetitionCount}
+          setCurrentAyah={setCurrentAyah}
+          setCurrentSurah={setCurrentSurah}
+          setCurrentSurahNumber={setCurrentSurahNumber}
+          endSurahNumber={endSurahNumber}
+          setCurrentJuz={setCurrentJuz}
+          currentJuz={currentJuz}
+          
           />
           
           <Card>
@@ -92,6 +129,8 @@ const MainPage: React.FC<mainPageProps>= ({
             currentSurahNumber={currentSurahNumber}
             selectedSubFolder={selectedSubFolder}
             mushafType={mushafType}
+            setCurrentPage={setCurrentPage}
+            perPageAyah={perPageAyah}
             />
           </Card>
         </div>

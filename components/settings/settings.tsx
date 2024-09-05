@@ -21,6 +21,9 @@ interface settingsProps{
 
     mushafType: string;
     setMushafType: React.Dispatch<React.SetStateAction<string>>;
+
+    perPageAyah: string;
+    setPerPageAyah: React.Dispatch<React.SetStateAction<string>>;
 }
 
 
@@ -34,7 +37,9 @@ const SettingsMenu: React.FC<settingsProps>= ({
   translationLanguage,
   setTranslationLanguage,
   mushafType,
-  setMushafType}) => {
+  setMushafType,
+  perPageAyah,
+  setPerPageAyah}) => {
     return (
         <TabsContent value="settings">
               <div className="space-y-4">
@@ -72,6 +77,19 @@ const SettingsMenu: React.FC<settingsProps>= ({
                     </SelectContent>
                   </Select>
                 </div>
+                <div>
+                  <Label className="text-sm font-medium">Per Page/Juz Ayah Style</Label>
+                  <Select value={perPageAyah} onValueChange={setPerPageAyah}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="per ayah">Per Ayah</SelectItem>
+                      <SelectItem value="per page">Per Page</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div>
                   <Label className="text-sm font-medium">Mushaf Style</Label>
                   <Select value={mushafType} onValueChange={setMushafType}>
