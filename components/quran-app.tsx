@@ -160,10 +160,10 @@ export function QuranApp() {
                     </Select>
                   </div>
                 )}
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <Switch id="autoplay" checked={autoPlay} onCheckedChange={setAutoPlay} />
                   <Label htmlFor="autoplay" className="text-sm font-medium">Auto-play next</Label>
-                </div>
+                </div> */}
               </div>
             </TabsContent>
             <TabsContent value="settings">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause } from "lucide-react";
+import { Play, Pause,StopCircle } from "lucide-react";
 import { CardContent } from "@/components/ui/card";
 import mushafTypes from '@/components/mainPage/mushafTypes.json'; // Adjust the path as necessary
 
@@ -271,7 +271,7 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                                             <div className="mr-4 text-xl font-bold flex items-center space-x-2">
                                                 <Button onClick={() => handlePlayPause(ayah.number)} size="icon" variant="outline">
                                                     {playingAyah === ayah.number ? (
-                                                        <Pause className="h-4 w-4" />
+                                                        <StopCircle className="h-4 w-4" />
                                                     ) : (
                                                         <Play className="h-4 w-4" />
                                                     )}
@@ -315,7 +315,7 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                                 <div className="mr-4 text-xl font-bold flex items-center space-x-2">
                                     <Button onClick={() => handlePlayPause(ayah.number)} size="icon" variant="outline">
                                         {playingAyah === ayah.number ? (
-                                            <Pause className="h-4 w-4" />
+                                            <StopCircle className="h-4 w-4" />
                                         ) : (
                                             <Play className="h-4 w-4" />
                                         )}
