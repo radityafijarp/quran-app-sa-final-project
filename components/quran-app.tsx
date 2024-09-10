@@ -75,7 +75,7 @@ export function QuranApp() {
       <div className={`${isSidebarOpen ? 'w-96' : 'w-0'} transition-all duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} border-r border-gray-200 overflow-hidden`}>
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Quran App</h1>
+            <h1 className="text-2xl font-bold">Memorize Quran App</h1>
             <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
               {isDarkMode ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
             </Button>

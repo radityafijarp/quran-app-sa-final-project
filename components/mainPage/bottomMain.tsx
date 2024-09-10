@@ -279,11 +279,11 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                                                 <span>{ayah.number}</span>
                                             </div>
                                             <div className="flex-1">
-                                                <div className="text-right text-4xl mb-2 font-['Scheherazade']">
+                                                <div className="text-right text-3xl mb-2 font-['Scheherazade']">
                                                     {ayah.text}
                                                 </div>
                                                 {showTranslation && translations[ayah.number] && (
-                                                    <p className="mb-2">
+                                                    <p className="text-sm">
                                                         {translations[ayah.number]}
                                                     </p>
                                                 )}
@@ -323,16 +323,16 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                                     <span>{ayah.number}</span>
                                 </div>
                                 <div className="flex-1">
-                                    <div className="text-right text-4xl mb-2 font-['Scheherazade']">
+                                    <div className="text-right text-3xl mb-2 font-['Scheherazade']">
                                         {ayah.text}
                                     </div>
                                     {showTransliteration && transliterations[ayah.number] && (
-                                        <p className="text-lg mb-2 italic">
+                                        <p className="text-sm mb-2 italic">
                                             {transliterations[ayah.number]}
                                         </p>
                                     )}
                                     {showTranslation && translations[ayah.number] && (
-                                        <p className="mb-2">
+                                        <p className="text-sm mb-2">
                                             {translations[ayah.number]}
                                         </p>
                                     )}
