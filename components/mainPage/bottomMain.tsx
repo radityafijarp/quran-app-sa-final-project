@@ -168,7 +168,10 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
     
     
 
-    const handlePlayPause = async (ayahNumber: number) => {
+    const handlePlayPause = async (ayahNumber: number, surahNumberParam?: number) => {
+        let surahNumber = surahNumberParam || currentSurahNumber; // Use the provided surah number or default to the current one
+        let localAyahNumber = ayahNumber;
+    
         if (playingAyah === ayahNumber) {
             // Pause the current audio if the same Ayah is playing
             currentAudio?.pause();
@@ -180,20 +183,14 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                 currentAudio.currentTime = 0;
             }
     
-            let surahNumber = currentSurahNumber;
-            console.log("surahNumber: "+surahNumber)
-            let localAyahNumber = ayahNumber;
-            console.log("ayah Number: "+localAyahNumber)
-            
-            if (repetitionMethod=== "page" || repetitionMethod=== "juz"){
+            if (repetitionMethod === "page" || repetitionMethod === "juz") {
                 if (perPageAyah === "per ayah") {
                     // Fetch Surah number and Ayah number when in "per ayah" mode
                     try {
                         const response = await fetch(`https://api.alquran.cloud/v1/page/${currentPage}`);
                         const result = await response.json();
-        
                         if (result.data && result.data.ayahs) {
-                            const ayah = result.data.ayahs.find((a: any) => a.number === ayahNumber);
+                            const ayah = result.data.ayahs.find((a: any) => a.numberInSurah === ayahNumber);
                             if (ayah) {
                                 surahNumber = ayah.surah.number;
                                 localAyahNumber = ayah.numberInSurah;
@@ -205,11 +202,11 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
                     }
                 }
             }
-            
     
             // Build audio URL and ensure the values are correctly formatted
             const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${String(surahNumber).padStart(3, '0')}${String(localAyahNumber).padStart(3, '0')}.mp3`;
-            console.log(audioUrl)
+    
+            console.log("Playing audio from URL:", audioUrl);
             const newAudio = new Audio(audioUrl);
     
             try {
@@ -227,7 +224,6 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
             };
         }
     };
-    
     
     
 
