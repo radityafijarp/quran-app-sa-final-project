@@ -108,7 +108,11 @@ export function QuranApp() {
                   />
                 )}
                 {repetitionMethod === 'juz' && (
-                  <PerJuz/>
+                  <PerJuz
+                  currentJuz={currentJuz}
+                  setCurrentJuz={setCurrentJuz}
+                  setCurrentPage={setCurrentPage}
+                  />
                 )}
                 {repetitionMethod === 'surah' && (
                   <PerSurah

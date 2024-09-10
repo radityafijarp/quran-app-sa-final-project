@@ -96,9 +96,9 @@ const TopMain: React.FC<topMainPageProps> = ({
 
     const handlePageRepetition = async () => {
         const initialRepetition = repetitionCount;
-        const initialPage=currentPage
-
-        if(ayahRepetition==1){
+        const initialPage = currentPage;
+        const initialAyahRepetition=ayahRepetition
+        if (ayahRepetition == 1) {
             for (let i = parseInt(initialPage); i <= parseInt(endPage); i++) {
                 let playingPage = i.toString();
     
@@ -108,52 +108,117 @@ const TopMain: React.FC<topMainPageProps> = ({
                     setRepetitionCount(prevCount => prevCount - 1);
                 }
                 setRepetitionCount(initialRepetition);
-                setCurrentPage((i+1).toString())
+                setCurrentPage((i + 1).toString());
             }
-    
+            setCurrentPage(initialPage);
             setRepetitionCount(initialRepetition);
         } else {
-
-        }
+            for (let i = parseInt(initialPage); i <= parseInt(endPage); i++) {
+                const playingPage = i.toString();
+                setCurrentPage(playingPage);
+    
+                try {
+                    const response = await fetch(`https://api.alquran.cloud/v1/page/${playingPage}`);
+                    const result = await response.json();
+                    for (let y = initialRepetition; y > 0; y--) {
+                        if (result.data && result.data.ayahs) {
+                            const ayahsData = result.data.ayahs;
         
+                            for (const ayah of ayahsData) {
+                                const ayahNumber = ayah.numberInSurah;
+                                const surahNumber = ayah.surah.number;
+        
+                                for (let y = ayahRepetition; y > 0; y--) {
+                                    const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${surahNumber.toString().padStart(3, '0')}${ayahNumber.toString().padStart(3, '0')}.mp3`;
+                                    await playAudio(ayahAudioUrl);
+                                    setAyahRepetition(prevCount => prevCount - 1);
+                                }
+        
+                                setAyahRepetition(initialAyahRepetition); // Reset for the next Ayah
+                            }
+                        } else {
+                            console.warn(`No Ayahs found for page ${playingPage}`);
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Error fetching Ayah data by page:", error);
+                }
+            }
+    
+            setCurrentPage(initialPage); // Reset to initial page after completion
+            setRepetitionCount(initialRepetition); // Reset repetition count
+        }
     };
+    
 
     const handleJuzRepetition = async () => {
         const initialRepetition = repetitionCount;
         const juzNumber = parseInt(currentJuz);
-
+        console.log("juz number "+juzNumber)
+    
+        if (isNaN(juzNumber) || juzNumber < 1 || juzNumber > 30) {
+            console.warn(`Invalid Juz number: ${currentJuz}`);
+            return; // Exit if Juz number is invalid
+        }
+    
+        // Calculate start and end pages for the Juz
         let startPage = juzNumber === 1 ? 1 : (juzNumber - 1) * 20 + 2;
         let endPage = juzNumber === 1 ? 21 : startPage + 19;
-
+    
         if (juzNumber === 30) {
-            endPage = 604;
+            endPage = 604; // The last page of the Quran
         }
-
-        for (let i = startPage; i <= endPage; i++) {
-            for (let y = initialRepetition; y > 0; y--) {
+    
+        setCurrentPage(startPage.toString()); // Set the initial current page
+        console.log("current page "+currentPage)
+        for (let y = initialRepetition; y > 0; y--) {
+            for (let i = startPage; i <= endPage; i++) {
                 const pageAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/PageMp3s/Page${i.toString().padStart(3, '0')}.mp3`;
-                await playAudio(pageAudioUrl);
-                setRepetitionCount(prevCount => prevCount - 1);
-            }
-        }
+                try {
+                    setCurrentPage(i.toString());
+                    await playAudio(pageAudioUrl);
 
+                } catch (error) {
+                    console.error(`Error playing Page ${i} audio:`, error);
+                }
+            }
+            setRepetitionCount(prevCount => prevCount - 1);
+        }
+    
+        // Reset repetition count after all repetitions
         setRepetitionCount(initialRepetition);
     };
+    
 
     const handleSurahRepetition = async () => {
         const initialRepetition = repetitionCount;
-        const totalAyahs = parseInt(endSurahNumber) - parseInt(currentSurahNumber) + 1;
-
-        for (let i = parseInt(currentSurahNumber); i < parseInt(currentSurahNumber) + totalAyahs; i++) {
-            for (let y = initialRepetition; y > 0; y--) {
-                const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${i.toString().padStart(3, '0')}${currentAyah.padStart(3, '0')}.mp3`;
-                await playAudio(ayahAudioUrl);
-                setRepetitionCount(prevCount => prevCount - 1);
-            }
+        const surah = surahs.find((surah) => surah.number === parseInt(currentSurahNumber));
+    
+        if (!surah) {
+            console.warn(`Surah number ${currentSurahNumber} not found in surahs data`);
+            return; // Exit if surah is not found
         }
-
+    
+        const totalAyahs = surah.numberOfAyahs;
+        for (let y = initialRepetition; y > 0; y--) {
+            for (let ayahNumber = 1; ayahNumber <= totalAyahs; ayahNumber++) {
+                const ayahAudioUrl = `https://everyayah.com/data/${selectedSubFolder}/${currentSurahNumber.padStart(3, '0')}${ayahNumber.toString().padStart(3, '0')}.mp3`;
+                
+                try {
+                    await playAudio(ayahAudioUrl);
+                    
+                } catch (error) {
+                    console.error(`Error playing Ayah ${ayahNumber} audio:`, error);
+                }
+            }
+            setRepetitionCount(prevCount => prevCount - 1);
+        }
+    
+        // Reset repetition count after all repetitions
         setRepetitionCount(initialRepetition);
     };
+    
 
     const handleCustomRepetition = async () => {
         // Ensure `surahs` is an array
