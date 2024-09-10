@@ -169,47 +169,56 @@ const BottomMain: React.FC<BottomMainPageProps> = ({
     
 
     const handlePlayPause = async (ayahNumber: number) => {
-        if (playingAyah === ayahNumber) {
-            currentAudio?.pause();
-            setPlayingAyah(null);
-        } else {
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
-    
-            let surahNumber = currentSurahNumber;
-            if (perPageAyah === "per ayah") {
-                // Fetch Surah number and Ayah number from API if in "per ayah" mode
-                try {
-                    const response = await fetch(`https://api.alquran.cloud/v1/page/${currentPage}`);
-                    const result = await response.json();
+    if (playingAyah === ayahNumber) {
+        currentAudio?.pause();
+        setPlayingAyah(null);
+    } else {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+
+        let surahNumber = currentSurahNumber;
+        let localAyahNumber = ayahNumber; // Initialize with the provided ayahNumber
+
+        if (perPageAyah === "per ayah") {
+            // Fetch Surah number and Ayah number from API if in "per ayah" mode
+            try {
+                const response = await fetch(`https://api.alquran.cloud/v1/page/${currentPage}`);
+                const result = await response.json();
+                
+                if (result.data && result.data.ayahs) {
                     const ayah = result.data.ayahs.find((a: any) => a.number === ayahNumber);
                     if (ayah) {
                         surahNumber = ayah.surah.number;
+                        localAyahNumber = ayah.numberInSurah; // Get the Ayah number within the Surah
                     }
-                } catch (error) {
-                    console.error("Error fetching Surah number and Ayah number:", error);
-                    return;
                 }
+            } catch (error) {
+                console.error("Error fetching Surah number and Ayah number:", error);
+                return;
             }
-    
-            const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${surahNumber.padStart(3, '0')}${ayahNumber.toString().padStart(3, '0')}.mp3`;
-            const newAudio = new Audio(audioUrl);
-    
-            newAudio.play().then(() => {
-                setPlayingAyah(ayahNumber);
-                setCurrentAudio(newAudio);
-            }).catch(error => {
-                console.error("Error playing audio:", error);
-                setPlayingAyah(null);
-            });
-    
-            newAudio.onended = () => {
-                setPlayingAyah(null);
-            };
         }
-    };
+
+        // Ensure surahNumber and localAyahNumber are strings before calling padStart
+        const audioUrl = `https://everyayah.com/data/${selectedSubFolder}/${String(surahNumber).padStart(3, '0')}${String(localAyahNumber).padStart(3, '0')}.mp3`;
+        const newAudio = new Audio(audioUrl);
+
+        newAudio.play().then(() => {
+            setPlayingAyah(ayahNumber);
+            setCurrentAudio(newAudio);
+        }).catch(error => {
+            console.error("Error playing audio:", error);
+            setPlayingAyah(null);
+        });
+
+        newAudio.onended = () => {
+            setPlayingAyah(null);
+        };
+    }
+};
+
+    
     
 
     const handleNextPage = () => {
