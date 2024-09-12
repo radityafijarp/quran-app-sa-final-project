@@ -87,11 +87,11 @@ const MainPage: React.FC<mainPageProps>= ({
 
     return(
     <div className="flex-1 flex flex-col">
-        <div className="p-4 flex items-center">
+        {/* <div className="p-4 flex items-center">
           <Button variant="ghost" size="icon" onClick={toggleSidebar}>
             {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </Button>
-        </div>
+        </div> */}
         <div className="flex-1 p-6 overflow-y-auto">
           <TopMain
           repetitionMethod={repetitionMethod}
