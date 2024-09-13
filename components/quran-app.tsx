@@ -1,6 +1,6 @@
 'use client'
 
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import MainPage from './mainPage/mainPage'
 import { Surah } from './mainPage/types'
 import SideBar from './SideBar'
@@ -23,24 +23,21 @@ export function QuranApp() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [ayahRepetition, setAyahRepetition] = useState(1)
   const [rangeRepetition, setRangeRepetition] = useState(1)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showTranslation, setShowTranslation] = useState(true)
   const [showTransliteration, setShowTransliteration] = useState(true)
   const [translationLanguage, setTranslationLanguage] = useState('indonesian')
   const [selectedSubFolder, setSelectedSubFolder] = useState('Ghamadi_40kbps')
   const [selectedQori, setSelectedQori] = useState('Ghamadi')
-  const [mushafType,setMushafType]=useState("8")
-  const [perPageAyah,setPerPageAyah]=useState("per ayah")
+  const [mushafType, setMushafType] = useState("8")
+  const [perPageAyah, setPerPageAyah] = useState("per ayah")
 
   const [surahs, setSurahs] = useState<Surah[]>([]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
-    // console.log(selectedSubFolder)
-  
   }
 
-  
   useEffect(() => {
     async function fetchSurahs() {
       try {
@@ -57,93 +54,97 @@ export function QuranApp() {
 
   return (
     <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'}`}>
-      <SideBar
-      isDarkMode={isDarkMode}
-      toggleDarkMode={toggleDarkMode}
-      selectedQori={selectedQori}
-      setSelectedQori={setSelectedQori}
-      selectedSubFolder={selectedSubFolder}
-      setSelectedSubFolder={setSelectedSubFolder}
-      repetitionMethod={repetitionMethod}
-      setRepetitionMethod={setRepetitionMethod}
-      surahs={surahs}
-      setSurahs={setSurahs}
-      currentPage={currentPage}
-      setCurrentPage={setCurrentPage}
-      endPage={endPage}
-      setEndPage={setEndPage}
-      volume={volume}
-      setVolume={setVolume}
-      isSidebarOpen={isSidebarOpen}
-      setIsSidebarOpen={setIsSidebarOpen}
-      currentSurah={currentSurah}
-      currentAyah={currentAyah}
-      isPlaying={isPlaying}
-      setIsPlaying={setIsPlaying}
-      ayahRepetition={ayahRepetition}
-      rangeRepetition={rangeRepetition}
-      repetitionCount={repetitionCount}
-      showTransliteration={showTransliteration}
-      showTranslation={showTranslation}
-      translationLanguage={translationLanguage}
-      currentSurahNumber={currentSurahNumber}
-      mushafType={mushafType}
-      setAyahRepetition={setAyahRepetition}
-      setRangeRepetition={setRangeRepetition}
-      setRepetitionCount={setRepetitionCount}
-      setCurrentAyah={setCurrentAyah}
-      setCurrentSurah={setCurrentSurah}
-      setCurrentSurahNumber={setCurrentSurahNumber}
-      endSurahNumber={endSurahNumber}
-      setCurrentJuz={setCurrentJuz}
-      currentJuz={currentJuz}
-      perPageAyah={perPageAyah}
-      endAyah={endAyah}
-      setEndAyah={setEndAyah}
-      setShowTranslation={setShowTranslation}
-      setShowTransliteration={setShowTransliteration}
-      setTranslationLanguage={setTranslationLanguage}
-      setMushafType={setMushafType}
-      setPerPageAyah={setPerPageAyah}
-      endSurah={endSurah}
-      setEndSurah={setEndSurah}
-      setEndSurahNumber={setEndSurahNumber}
-      />
-      <MainPage 
-      isSidebarOpen={isSidebarOpen}
-      setIsSidebarOpen={setIsSidebarOpen}
-      repetitionMethod={repetitionMethod}
-      currentPage={currentPage}
-      currentSurah={currentSurah}
-      currentAyah={currentAyah}
-      isPlaying={isPlaying}
-      setIsPlaying={setIsPlaying}
-      ayahRepetition={ayahRepetition}
-      rangeRepetition={rangeRepetition}
-      repetitionCount={repetitionCount}
-      showTransliteration={showTransliteration}
-      showTranslation={showTranslation}
-      translationLanguage={translationLanguage}
-      selectedQori={selectedQori}
-      currentSurahNumber={currentSurahNumber}
-      selectedSubFolder={selectedSubFolder}
-      mushafType={mushafType}
-      setCurrentPage={setCurrentPage}
-      endPage={endPage}
-      setAyahRepetition={setAyahRepetition}
-      setRangeRepetition={setRangeRepetition}
-      setRepetitionCount={setRepetitionCount}
-      setCurrentAyah={setCurrentAyah}
-      setCurrentSurah={setCurrentSurah}
-      setCurrentSurahNumber={setCurrentSurahNumber}
-      endSurahNumber={endSurahNumber}
-      setCurrentJuz={setCurrentJuz}
-      currentJuz={currentJuz}
-      perPageAyah={perPageAyah}
-      endAyah={endAyah}
-      setEndAyah={setEndAyah}
-      surahs={surahs}
-      />
+      <div className={`fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out transform lg:w-64 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+        <SideBar
+          isDarkMode={isDarkMode}
+          toggleDarkMode={toggleDarkMode}
+          selectedQori={selectedQori}
+          setSelectedQori={setSelectedQori}
+          selectedSubFolder={selectedSubFolder}
+          setSelectedSubFolder={setSelectedSubFolder}
+          repetitionMethod={repetitionMethod}
+          setRepetitionMethod={setRepetitionMethod}
+          surahs={surahs}
+          setSurahs={setSurahs}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          endPage={endPage}
+          setEndPage={setEndPage}
+          volume={volume}
+          setVolume={setVolume}
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          currentSurah={currentSurah}
+          currentAyah={currentAyah}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          ayahRepetition={ayahRepetition}
+          rangeRepetition={rangeRepetition}
+          repetitionCount={repetitionCount}
+          showTransliteration={showTransliteration}
+          showTranslation={showTranslation}
+          translationLanguage={translationLanguage}
+          currentSurahNumber={currentSurahNumber}
+          mushafType={mushafType}
+          setAyahRepetition={setAyahRepetition}
+          setRangeRepetition={setRangeRepetition}
+          setRepetitionCount={setRepetitionCount}
+          setCurrentAyah={setCurrentAyah}
+          setCurrentSurah={setCurrentSurah}
+          setCurrentSurahNumber={setCurrentSurahNumber}
+          endSurahNumber={endSurahNumber}
+          setCurrentJuz={setCurrentJuz}
+          currentJuz={currentJuz}
+          perPageAyah={perPageAyah}
+          endAyah={endAyah}
+          setEndAyah={setEndAyah}
+          setShowTranslation={setShowTranslation}
+          setShowTransliteration={setShowTransliteration}
+          setTranslationLanguage={setTranslationLanguage}
+          setMushafType={setMushafType}
+          setPerPageAyah={setPerPageAyah}
+          endSurah={endSurah}
+          setEndSurah={setEndSurah}
+          setEndSurahNumber={setEndSurahNumber}
+        />
+      </div>
+      <div className={`flex-1 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'lg:ml-96' : ''} lg:w-full`}>
+        <MainPage 
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          repetitionMethod={repetitionMethod}
+          currentPage={currentPage}
+          currentSurah={currentSurah}
+          currentAyah={currentAyah}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          ayahRepetition={ayahRepetition}
+          rangeRepetition={rangeRepetition}
+          repetitionCount={repetitionCount}
+          showTransliteration={showTransliteration}
+          showTranslation={showTranslation}
+          translationLanguage={translationLanguage}
+          selectedQori={selectedQori}
+          currentSurahNumber={currentSurahNumber}
+          selectedSubFolder={selectedSubFolder}
+          mushafType={mushafType}
+          setCurrentPage={setCurrentPage}
+          endPage={endPage}
+          setAyahRepetition={setAyahRepetition}
+          setRangeRepetition={setRangeRepetition}
+          setRepetitionCount={setRepetitionCount}
+          setCurrentAyah={setCurrentAyah}
+          setCurrentSurah={setCurrentSurah}
+          setCurrentSurahNumber={setCurrentSurahNumber}
+          endSurahNumber={endSurahNumber}
+          setCurrentJuz={setCurrentJuz}
+          currentJuz={currentJuz}
+          perPageAyah={perPageAyah}
+          endAyah={endAyah}
+          setEndAyah={setEndAyah}
+          surahs={surahs}
+        />
+      </div>
     </div>
   )
 }

@@ -128,128 +128,129 @@ const SideBar: React.FC<SideBarProps> = ({
   setEndSurahNumber,
 }) => {
   return (
-    <>
-      {/* Sidebar Toggle Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-4 left-4 z-50" // Add styling to position the button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-      >
-        <Menu className="h-6 w-6" />
-      </Button>
+      <>
+    {/* Sidebar Toggle Button */}
+    <Button
+      variant="ghost"
+      size="icon"
+      className="fixed top-4 left-4 z-50" // Positioning the button
+      onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+    >
+      <Menu className="h-6 w-6" />
+    </Button>
 
-      {/* Sidebar */}
-      <div className={`${isSidebarOpen ? 'w-96' : 'w-0'} transition-all duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} border-r border-gray-200 overflow-hidden`}>
-        <div className="p-6 pl-12"> {/* Adjust the padding here */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Memorize Quran App</h1>
-            <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
-              {isDarkMode ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
-            </Button>
-          </div>
-          <Tabs defaultValue="playback">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="playback">Playback</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
-            </TabsList>
-            <TabsContent value="playback">
-              <div className="space-y-4">
-                <SelectQori
-                  selectedSubFolder={selectedSubFolder}
-                  setSelectedSubFolder={setSelectedSubFolder}
-                  selectedQori={selectedQori}
-                  setSelectedQori={setSelectedQori}
-                />
-                <SelectMethod
-                  repetitionMethod={repetitionMethod}
-                  setRepetitionMethod={setRepetitionMethod}
-                />
-                {repetitionMethod === 'page' && (
-                  <PerPage
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    endPage={endPage}
-                    setEndPage={setEndPage}
-                    ayahRepetition={ayahRepetition}
-                    setAyahRepetition={setAyahRepetition}
-                  />
-                )}
-                {repetitionMethod === 'juz' && (
-                  <PerJuz
-                    currentJuz={currentJuz}
-                    setCurrentJuz={setCurrentJuz}
-                    setCurrentPage={setCurrentPage}
-                  />
-                )}
-                {repetitionMethod === 'surah' && (
-                  <PerSurah
-                    currentSurah={currentSurah}
-                    setCurrentSurah={setCurrentSurah}
-                    currentSurahNumber={currentSurahNumber}
-                    setCurrentSurahNumber={setCurrentSurahNumber}
-                  />
-                )}
-                {repetitionMethod === 'custom' && (
-                  <Custom
-                    ayahRepetition={ayahRepetition}
-                    setAyahRepetition={setAyahRepetition}
-                    rangeRepetition={rangeRepetition}
-                    setRangeRepetition={setRangeRepetition}
-                    currentSurah={currentSurah}
-                    setCurrentSurah={setCurrentSurah}
-                    endSurah={endSurah}
-                    setEndSurah={setEndSurah}
-                    currentAyah={currentAyah}
-                    setCurrentAyah={setCurrentAyah}
-                    endAyah={endAyah}
-                    setEndAyah={setEndAyah}
-                    setCurrentSurahNumber={setCurrentSurahNumber}
-                    currentSurahNumber={currentSurahNumber}
-                    setEndSurahNumber={setEndSurahNumber}
-                    endSurahNumber={endSurahNumber}
-                    surahs={surahs}
-                    setSurahs={setSurahs}
-                  />
-                )}
-
-                {repetitionMethod !== 'custom' && (
-                  <div>
-                    <Label className="text-sm font-medium">Repetition Count</Label>
-                    <Select value={repetitionCount.toString()} onValueChange={(value) => setRepetitionCount(parseInt(value))}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[...Array(10)].map((_, i) => (
-                          <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-            <TabsContent value="settings">
-              <SettingsMenu
-                volume={volume}
-                setVolume={setVolume}
-                showTranslation={showTranslation}
-                setShowTranslation={setShowTranslation}
-                showTransliteration={showTransliteration}
-                setShowTransliteration={setShowTransliteration}
-                translationLanguage={translationLanguage}
-                setTranslationLanguage={setTranslationLanguage}
-                mushafType={mushafType}
-                setMushafType={setMushafType}
-                perPageAyah={perPageAyah}
-                setPerPageAyah={setPerPageAyah}
-              />
-            </TabsContent>
-          </Tabs>
+    {/* Sidebar */}
+    <div className={`${isSidebarOpen ? 'w-96' : 'w-0'} transition-all duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} border-r border-gray-200 overflow-hidden min-h-screen`}>
+      <div className="p-6 pl-12"> {/* Adjust the padding here */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Memorize Quran App</h1>
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
+            {isDarkMode ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
+          </Button>
         </div>
+        <Tabs defaultValue="playback">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="playback">Playback</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
+          </TabsList>
+          <TabsContent value="playback">
+            <div className="space-y-4">
+              <SelectQori
+                selectedSubFolder={selectedSubFolder}
+                setSelectedSubFolder={setSelectedSubFolder}
+                selectedQori={selectedQori}
+                setSelectedQori={setSelectedQori}
+              />
+              <SelectMethod
+                repetitionMethod={repetitionMethod}
+                setRepetitionMethod={setRepetitionMethod}
+              />
+              {repetitionMethod === 'page' && (
+                <PerPage
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  endPage={endPage}
+                  setEndPage={setEndPage}
+                  ayahRepetition={ayahRepetition}
+                  setAyahRepetition={setAyahRepetition}
+                />
+              )}
+              {repetitionMethod === 'juz' && (
+                <PerJuz
+                  currentJuz={currentJuz}
+                  setCurrentJuz={setCurrentJuz}
+                  setCurrentPage={setCurrentPage}
+                />
+              )}
+              {repetitionMethod === 'surah' && (
+                <PerSurah
+                  currentSurah={currentSurah}
+                  setCurrentSurah={setCurrentSurah}
+                  currentSurahNumber={currentSurahNumber}
+                  setCurrentSurahNumber={setCurrentSurahNumber}
+                />
+              )}
+              {repetitionMethod === 'custom' && (
+                <Custom
+                  ayahRepetition={ayahRepetition}
+                  setAyahRepetition={setAyahRepetition}
+                  rangeRepetition={rangeRepetition}
+                  setRangeRepetition={setRangeRepetition}
+                  currentSurah={currentSurah}
+                  setCurrentSurah={setCurrentSurah}
+                  endSurah={endSurah}
+                  setEndSurah={setEndSurah}
+                  currentAyah={currentAyah}
+                  setCurrentAyah={setCurrentAyah}
+                  endAyah={endAyah}
+                  setEndAyah={setEndAyah}
+                  setCurrentSurahNumber={setCurrentSurahNumber}
+                  currentSurahNumber={currentSurahNumber}
+                  setEndSurahNumber={setEndSurahNumber}
+                  endSurahNumber={endSurahNumber}
+                  surahs={surahs}
+                  setSurahs={setSurahs}
+                />
+              )}
+
+              {repetitionMethod !== 'custom' && (
+                <div>
+                  <Label className="text-sm font-medium">Repetition Count</Label>
+                  <Select value={repetitionCount.toString()} onValueChange={(value) => setRepetitionCount(parseInt(value))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[...Array(10)].map((_, i) => (
+                        <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="settings">
+            <SettingsMenu
+              volume={volume}
+              setVolume={setVolume}
+              showTranslation={showTranslation}
+              setShowTranslation={setShowTranslation}
+              showTransliteration={showTransliteration}
+              setShowTransliteration={setShowTransliteration}
+              translationLanguage={translationLanguage}
+              setTranslationLanguage={setTranslationLanguage}
+              mushafType={mushafType}
+              setMushafType={setMushafType}
+              perPageAyah={perPageAyah}
+              setPerPageAyah={setPerPageAyah}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
-    </>
+    </div>
+  </>
+
   );
 };
 
