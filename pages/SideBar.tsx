@@ -1,17 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sun, Moon, Menu } from "lucide-react"; // Import the Menu icon
-import SelectQori from './intialSidePage/selectQori';
-import SelectMethod from './intialSidePage/selectMethod';
-import { PerPage } from './repetitionMethod/perPage';
-import { PerJuz } from './repetitionMethod/perJuz';
-import { PerSurah } from './repetitionMethod/perSurah';
-import Custom from './repetitionMethod/custom';
-import SettingsMenu from './settings/settings';
+import { Sun, Moon, Menu, BookOpen, LogIn, LogOut, UserPlus } from "lucide-react"
+import SelectQori from '../components/intialSidePage/selectQori';
+import SelectMethod from '../components/intialSidePage/selectMethod';
+import { PerPage } from '../components/repetitionMethod/perPage';
+import { PerJuz } from '../components/repetitionMethod/perJuz';
+import { PerSurah } from '../components/repetitionMethod/perSurah';
+import Custom from '../components/repetitionMethod/custom';
+import SettingsMenu from '../components/settings/settings';
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Surah } from './mainPage/types';
+import { Surah } from '../components/mainPage/types';
 import React from "react";
+import { useRouter } from 'next/navigation';
 
 interface SideBarProps {
   isDarkMode: boolean;
@@ -73,6 +74,8 @@ interface SideBarProps {
   endSurah: string;
   setEndSurah: React.Dispatch<React.SetStateAction<string>>;
   setEndSurahNumber: React.Dispatch<React.SetStateAction<string>>;
+  isLoggedIn: boolean
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SideBar: React.FC<SideBarProps> = ({
@@ -126,7 +129,34 @@ const SideBar: React.FC<SideBarProps> = ({
   endSurah,
   setEndSurah,
   setEndSurahNumber,
+  isLoggedIn, 
+  setIsLoggedIn, 
 }) => {
+  const router = useRouter()
+
+  const handleMemorizationLog = () => {
+    if (isLoggedIn) {
+      router.push('/log')
+    } else {
+      router.push('/login?redirect=/log')
+    }
+  }
+
+  const handleSignUp = () => {
+    router.push('/signup')
+  }
+
+  const handleLogin = () => {
+    router.push('/login')
+  }
+
+  const handleLogout = () => {
+    // Implement logout logic here
+    setIsLoggedIn(false)
+    // Redirect to home page or login page after logout
+    router.push('/')
+  }
+
   return (
       <>
     {/* Sidebar Toggle Button */}
@@ -247,6 +277,31 @@ const SideBar: React.FC<SideBarProps> = ({
             />
           </TabsContent>
         </Tabs>
+        {/* Memorization Log Button */}
+        <Button 
+            className="w-full mt-4" 
+            onClick={handleMemorizationLog}
+          >
+            <BookOpen className="mr-2 h-4 w-4" /> Memorization Log
+          </Button>
+        </div>
+        
+        {/* Authentication Buttons */}
+        <div className="p-6 pl-12">
+          {isLoggedIn ? (
+            <Button className="w-full" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" /> Log Out
+            </Button>
+          ) : (
+            <>
+              <Button className="w-full mb-2" onClick={handleSignUp}>
+                <UserPlus className="mr-2 h-4 w-4" /> Sign Up
+              </Button>
+              <Button className="w-full" onClick={handleLogin}>
+                <LogIn className="mr-2 h-4 w-4" /> Login
+              </Button>
+            </>
+          )}
       </div>
     </div>
   </>

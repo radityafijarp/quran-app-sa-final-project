@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import MainPage from './mainPage/mainPage'
-import { Surah } from './mainPage/types'
+import MainPage from '../components/mainPage/mainPage'
+import { Surah } from '../components/mainPage/types'
 import SideBar from './SideBar'
 
 export function QuranApp() {
@@ -31,6 +31,7 @@ export function QuranApp() {
   const [selectedQori, setSelectedQori] = useState('Ghamadi')
   const [mushafType, setMushafType] = useState("8")
   const [perPageAyah, setPerPageAyah] = useState("per ayah")
+  const [isLoggedIn,setIsLoggedIn]=useState(false)
 
   const [surahs, setSurahs] = useState<Surah[]>([]);
 
@@ -106,6 +107,8 @@ export function QuranApp() {
           endSurah={endSurah}
           setEndSurah={setEndSurah}
           setEndSurahNumber={setEndSurahNumber}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn} 
         />
       </div>
       <div className={`flex-1 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'lg:ml-96' : ''} lg:w-full`}>
