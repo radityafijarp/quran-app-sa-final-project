@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Surah } from '../components/mainPage/types';
 import React from "react";
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from "react";
 
 interface SideBarProps {
   isDarkMode: boolean;
@@ -74,8 +75,6 @@ interface SideBarProps {
   endSurah: string;
   setEndSurah: React.Dispatch<React.SetStateAction<string>>;
   setEndSurahNumber: React.Dispatch<React.SetStateAction<string>>;
-  isLoggedIn: boolean
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SideBar: React.FC<SideBarProps> = ({
@@ -129,10 +128,15 @@ const SideBar: React.FC<SideBarProps> = ({
   endSurah,
   setEndSurah,
   setEndSurahNumber,
-  isLoggedIn, 
-  setIsLoggedIn, 
 }) => {
   const router = useRouter()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    // Check for token in localStorage when component mounts
+    const token = localStorage.getItem('token')
+    setIsLoggedIn(!!token)
+  }, [])
 
   const handleMemorizationLog = () => {
     if (isLoggedIn) {
@@ -151,12 +155,11 @@ const SideBar: React.FC<SideBarProps> = ({
   }
 
   const handleLogout = () => {
-    // Implement logout logic here
+    localStorage.removeItem('token')
     setIsLoggedIn(false)
-    // Redirect to home page or login page after logout
     router.push('/')
   }
-
+  
   return (
       <>
     {/* Sidebar Toggle Button */}

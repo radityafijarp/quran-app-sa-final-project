@@ -107,8 +107,6 @@ export function QuranApp() {
           endSurah={endSurah}
           setEndSurah={setEndSurah}
           setEndSurahNumber={setEndSurahNumber}
-          isLoggedIn={isLoggedIn}
-          setIsLoggedIn={setIsLoggedIn} 
         />
       </div>
       <div className={`flex-1 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'lg:ml-96' : ''} lg:w-full`}>
