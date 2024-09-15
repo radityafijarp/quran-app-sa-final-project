@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from 'next/router';
 
 interface FormData {
   fullname: string;
@@ -22,6 +23,8 @@ export default function SignUpPage() {
     desc: '',
     profilePic: ''
   });
+
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -55,8 +58,9 @@ export default function SignUpPage() {
 
       if (response.ok) {
         alert('User registered successfully!');
+        router.push('/login');
       } else {
-        alert('Registration failed');
+        alert('Use another username');
       }
     } catch (error) {
       console.error('Error:', error);
