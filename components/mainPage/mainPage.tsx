@@ -125,7 +125,7 @@ const MainPage: React.FC<mainPageProps>= ({
           <Card>
             <CardHeader>
               <CardTitle>
-                {repetitionMethod === 'page' || repetitionMethod === 'juz' ? 'Page Content' : 'Ayah Text'}
+                {repetitionMethod === 'page' || repetitionMethod === 'juz' ? `Page ${currentPage}` : `Surah ${currentSurah}`}
               </CardTitle>
             </CardHeader>
             <BottomMain 
