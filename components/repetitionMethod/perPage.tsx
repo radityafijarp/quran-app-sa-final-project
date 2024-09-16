@@ -72,13 +72,21 @@ export const PerPage: React.FC<PerPageProps> = ({
       <div>
         <Label className="text-sm font-medium">Repetition Per Ayah</Label>
         <div>
-          <Input
-            type="number"
-            min="1"
-            value={ayahRepetition}
-            onChange={(e) => setAyahRepetition(Math.max(1, parseInt(e.target.value)))}
-            className="w-full"
-          />
+          <Select
+            value={ayahRepetition.toString()}
+            onValueChange={(value) => setAyahRepetition(parseInt(value))}
+            >
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[...Array(20)].map((_, i) => (
+                <SelectItem key={i} value={(i + 1).toString()}>
+                  {i + 1}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>

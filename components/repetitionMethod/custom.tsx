@@ -150,24 +150,40 @@ const Custom: React.FC<customProps> = ({
 
       <div>
         <Label className="text-sm font-medium">Repetition Per Ayah</Label>
-        <Input
-          type="number"
-          min="1"
-          value={ayahRepetition}
-          onChange={(e) => setAyahRepetition(Math.max(1, parseInt(e.target.value)))}
-          className="w-full"
-        />
+        <Select
+          value={ayahRepetition.toString()}
+          onValueChange={(value) => setAyahRepetition(parseInt(value))}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[...Array(20)].map((_, i) => (
+              <SelectItem key={i} value={(i + 1).toString()}>
+                {i + 1}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
         <Label className="text-sm font-medium">Repetition Per Range</Label>
-        <Input
-          type="number"
-          min="1"
-          value={rangeRepetition}
-          onChange={(e) => setRangeRepetition(Math.max(1, parseInt(e.target.value)))}
-          className="w-full"
-        />
+        <Select
+          value={rangeRepetition.toString()}
+          onValueChange={(value) => setRangeRepetition(parseInt(value))}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[...Array(20)].map((_, i) => (
+              <SelectItem key={i} value={(i + 1).toString()}>
+                {i + 1}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </>
   );
