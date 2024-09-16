@@ -44,7 +44,7 @@ const SettingsMenu: React.FC<settingsProps>= ({
         <TabsContent value="settings">
               <div className="space-y-4">
                 <div>
-                  <Label className="text-sm font-medium">Volume</Label>
+                  {/* <Label className="text-sm font-medium">Volume</Label>
                   <div className="flex items-center space-x-2">
                     <Volume2 className="h-4 w-4" />
                     <Slider
@@ -55,7 +55,7 @@ const SettingsMenu: React.FC<settingsProps>= ({
                       className="flex-1"
                     />
                     <span className="text-sm">{volume}%</span>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex items-center space-x-2">
                   <Switch id="show-translation" checked={showTranslation} onCheckedChange={setShowTranslation} />
