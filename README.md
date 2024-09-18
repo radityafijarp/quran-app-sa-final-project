@@ -56,6 +56,41 @@ The Quran Memorization App is a comprehensive tool designed to assist users in m
 
 - Seamless experience across desktop and mobile devices.
 
+## User Interface Documentation
+### Main Page
+- URL: "/"
+![alt text](image.png)
+
+### Signup Page
+- URL: "/signup"
+![alt text](image-1.png)
+
+### Login Page
+- URL: "login"
+![alt text](image-3.png)
+#### Dummy User Credentials
+You can use the following dummy user accounts for testing login:
+1. John Doe
+    - Username: john_doe
+    - Password: password123
+
+2. Jane Doe
+    - Username: jane_doe
+    - Password: password456
+
+### Memorization Log
+#### Memorization Log Main Page
+- URL: "/log"
+![alt text](image-4.png)
+
+#### Memorization Log Form
+- URL: "/log"
+![alt text](image-5.png)
+
+#### Edit Memorization Log
+- URL: "/edit/{memorization id}"
+![alt text](image-6.png)
+
 ## Technical Details
 
 - Built with React and Next.js for a fast, modern web application experience.
@@ -66,6 +101,9 @@ The Quran Memorization App is a comprehensive tool designed to assist users in m
 ### 1. Interaction With Backend
 The backend was written in Golang
 - The BE repository: https://github.com/radityafijarp/be-quran-app-final-project
+- Communication FE - BE Flow
+
+![alt text](<Memorize Quran App FE-BE Interation.drawio (4).png>)
 
 ### 2. Data Sources
 
@@ -106,31 +144,6 @@ Our Quran Memorization App utilizes various APIs and resources to provide a comp
 - Reciter (Qari) List: Likely stored locally or in a configuration file.
 
 This diverse set of data sources allows our app to provide a rich, customizable experience for Quran study and memorization. Users can access various translations, audio recitations, and visual representations of the Quran, catering to different learning preferences and needs.
-
-## User Interface Dokumentation
-### Main Page
-![alt text](image.png)
-
-### Signup Page
-![alt text](image-1.png)
-
-### Login Page
-![alt text](image-3.png)
-#### Dummy User Credentials
-You can use the following dummy user accounts for testing login:
-1. John Doe
-    - Username: john_doe
-    - Password: password123
-
-2. Jane Doe
-    - Username: jane_doe
-    - Password: password456
-
-### Memorization Log Page
-![alt text](image-4.png)
-
-### Memorization Log Form
-![alt text](image-5.png)
 
 ## Getting Started
 
