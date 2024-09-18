@@ -107,6 +107,31 @@ Our Quran Memorization App utilizes various APIs and resources to provide a comp
 
 This diverse set of data sources allows our app to provide a rich, customizable experience for Quran study and memorization. Users can access various translations, audio recitations, and visual representations of the Quran, catering to different learning preferences and needs.
 
+## User Interface Dokumentation
+### Main Page
+![alt text](image.png)
+
+### Signup Page
+![alt text](image-1.png)
+
+### Login Page
+![alt text](image-3.png)
+#### Dummy User Credentials
+You can use the following dummy user accounts for testing login:
+1. John Doe
+    - Username: john_doe
+    - Password: password123
+
+2. Jane Doe
+    - Username: jane_doe
+    - Password: password456
+
+### Memorization Log Page
+![alt text](image-4.png)
+
+### Memorization Log Form
+![alt text](image-5.png)
+
 ## Getting Started
 
 1. Clone the repository
