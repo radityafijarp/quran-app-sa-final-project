@@ -103,7 +103,7 @@ The backend was written in Golang
 - The BE repository: https://github.com/radityafijarp/be-quran-app-final-project
 - Communication FE - BE Flow
 
-![alt text](<Memorize Quran App FE-BE Interation.drawio (4).png>)
+![alt text](<Memorize Quran App FE-BE Interation.drawio (5).png>)
 
 ### 2. Data Sources
 
