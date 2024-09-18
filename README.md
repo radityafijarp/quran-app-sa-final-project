@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Quran Memorization App
+
+## Background
+The Quran, revered as the ultimate guidance for Muslims, offers divine instructions on how to live a righteous and fulfilling life. For many Muslims, memorizing the Quran is not only a spiritual pursuit but also a means of internalizing this guidance. By memorizing its verses, they can carry the Quran within their minds and hearts, ensuring they have access to its wisdom at all times.
+
+One of the most effective ways to memorize the Quran is through listening, which reflects how the Quran was originally revealed and transmitted by the Prophet Muhammad (peace be upon him) to his companions (Sahabah). Listening is a passive yet powerful method that requires minimal effort and can be done almost anywhere, making it especially appealing in our fast-paced modern lives. Through repetition, these auditory experiences imprint themselves in long-term memory, reinforcing both comprehension and retention of the sacred text.
+
+With advancements in technology, accessing and interacting with the Quran has become easier than ever. The Quran Memorization App leverages these advancements to provide a seamless and accessible experience for users on various devices, including mobile phones. By offering customizable repetition methods and recitation options, it empowers Muslims to memorize the Quran at their own pace and convenience, wherever they are.
+
+## Overview
+
+The Quran Memorization App is a comprehensive tool designed to assist users in memorizing and studying the Quran. It offers a range of features to enhance the learning experience, including customizable recitation playback, translation options, and progress tracking.
+
+## Features
+
+### 1. Customizable Quran Recitation
+
+- **Multiple Qaris**: Choose from a selection of renowned Quran reciters.
+- **Repetition Methods**: 
+  - Per Page
+  - Per Juz (Chapter)
+  - Per Surah
+  - Custom Range
+- **Adjustable Repetition**: Set the number of repetitions for verses or ranges.
+
+### 2. Interactive Quran Text
+
+- **Arabic Script**: View the Quran in its original Arabic text.
+- **Transliteration**: Option to display transliterated text for non-Arabic speakers.
+- **Translation**: Read translations in multiple languages.
+
+### 3. Playback Controls
+
+- Play, stop, skip forward, and backward.
+
+### 4. Memorization Aids
+
+- **Progress Tracking**: Keep track of memorized verses and chapters.
+
+### 5. Customizable Display
+
+- **Dark Mode**: Toggle between light and dark themes for comfortable reading.
+- **Mushaf Types**: Choose from different Quran script styles.
+
+### 6. User Accounts
+
+- Create personal accounts to save progress and settings.
+- Log memorization sessions and track improvement over time.
+
+### 7. Memorization Log
+
+- Record and review memorization progress.
+- Add notes and set review frequencies for memorized portions.
+
+### 8. Responsive Design
+
+- Seamless experience across desktop and mobile devices.
+
+## Technical Details
+
+- Built with React and Next.js for a fast, modern web application experience.
+- Utilizes server-side rendering for improved performance.
+- Implements user authentication for personalized experiences.
+- Responsive design using Tailwind CSS for a mobile-friendly interface.
+
+### 1. Interaction With Backend
+The backend was written in Golang
+- The BE repository: https://github.com/radityafijarp/be-quran-app-final-project
+
+### 2. Data Sources
+
+Our Quran Memorization App utilizes various APIs and resources to provide a comprehensive Quranic study experience:
+
+#### Quran Text and Translations
+
+1. **Arabic Text and Basic Info**: 
+   - API: `https://equran.id/api/v2/surat/${surahNumber}`
+   - Provides Arabic text, transliteration, and Indonesian translation.
+
+2. **English Translation**: 
+   - API: `https://api.alquran.cloud/v1/surah/${surahNumber}/en.asad`
+   - Offers English translation by Muhammad Asad.
+
+3. **Page-based Quran Data**: 
+   - API: `https://api.alquran.cloud/v1/page/${pageNumber}`
+   - Fetches ayahs by page number for the "per ayah" view mode.
+
+4. **Individual Ayah Translations**: 
+   - API: `https://quran-api-id.vercel.app/surahs/${surahNumber}/ayahs/${ayahNumber}`
+   - Used for Bahasa Indonesia translations of specific ayahs.
+
+#### Audio Recitations
+
+- Source: EveryAyah.com
+- URL Structure: `https://everyayah.com/data/${reciterFolder}/${paddedSurahNumber}${paddedAyahNumber}.mp3`
+- Offers various reciters, selectable by the user.
+
+#### Mushaf (Quran Page) Images
+
+- Sourced from multiple providers based on the selected Mushaf type.
+- Configuration for different Mushaf types is stored locally in `mushafTypes.json`.
+
+#### Additional Data
+
+- List of Surahs: Fetched from API or stored locally.
+- Reciter (Qari) List: Likely stored locally or in a configuration file.
+
+This diverse set of data sources allows our app to provide a rich, customizable experience for Quran study and memorization. Users can access various translations, audio recitations, and visual representations of the Quran, catering to different learning preferences and needs.
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run the development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Don't forget to run the BE server first.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
