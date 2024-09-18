@@ -153,3 +153,19 @@ This diverse set of data sources allows our app to provide a rich, customizable 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 5. Don't forget to run the BE server first.
 
+## Running Unit Test
+
+```bash
+# Using npm
+npm test
+```
+
+   or
+
+```bash
+# Using npm
+npm test -- --coverage
+
+```
+
+
